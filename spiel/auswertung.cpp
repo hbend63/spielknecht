@@ -24,7 +24,7 @@ void Auswertung::setParts(const QList<Part *> &newParts)
 
         if (p->timerEnd()==0)
             tim=-1;
-        ui->txtAuswertung->append("Produkt: "+p->uID() + "\tangefangen: " + p->processStart().toString("hh:mm:ss") + "\tbeendet: " + p->processReady().toString("hh:mm:ss") + "\tDurchlaufzeit: " + QString::number(tim) + " sek.");
+        ui->txtAuswertung->append("Produktnr: "+p->uID() + "\t"+tr("angefangen")+": " + p->processStart().toString("hh:mm:ss") + "\t"+tr("beendet")+": " + p->processReady().toString("hh:mm:ss") + "\t"+tr("Durchlaufzeit")+": " + QString::number(tim) + " sek.");
         if (tim > 0)
         {
           if (tim < minTime)
@@ -36,16 +36,16 @@ void Auswertung::setParts(const QList<Part *> &newParts)
         }
     }
     ui->txtAuswertung->append("");
-    ui->txtAuswertung->append("in Produktion: "+QString::number(newParts.size()));
-    ui->txtAuswertung->append("angefangen: "+QString::number(newParts.size()-count));
-    ui->txtAuswertung->append("gefertigt: "+QString::number(count));
+    ui->txtAuswertung->append(tr("in Produktion")+": "+QString::number(newParts.size()));
+    ui->txtAuswertung->append(tr("angefangen")+": "+QString::number(newParts.size()-count));
+    ui->txtAuswertung->append(tr("gefertigt")+": "+QString::number(count));
 
     if (count > 0)
     {
        ui->txtAuswertung->append("");
-       ui->txtAuswertung->append("schnellster Durchlauf: "+QString::number(minTime)+ " sek.");
-       ui->txtAuswertung->append("langsamsamster Durchlauf: "+QString::number(maxTime)+ " sek.");
-       ui->txtAuswertung->append("mittlere Durchlaufzeit: "+QString::number(sumTime/count)+ " sek.");
+       ui->txtAuswertung->append(tr("schnellster Durchlauf")+": "+QString::number(minTime)+ " sek.");
+       ui->txtAuswertung->append(tr("langsamsamster Durchlauf")+": "+QString::number(maxTime)+ " sek.");
+       ui->txtAuswertung->append(tr("mittlere Durchlaufzeit")+": "+QString::number(sumTime/count)+ " sek.");
     }
 }
 

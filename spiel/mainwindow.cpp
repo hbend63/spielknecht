@@ -15,8 +15,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {    
     ui->setupUi(this);
-    ui->lbUIDDesc->setText("Read UID:");
-    ui->lbUID->setText("None");
+    ui->lbUIDDesc->setText(tr("Read UID")+": ");
+    ui->lbUID->setText(tr("None"));
     ui->lbRemain->setText(QString::number(mTimeCounter/60)+" min");
     ui->lbStorno->clear();
     port = new QSerialPort;
@@ -79,7 +79,7 @@ bool MainWindow::deletePart(Part *p)
     {
         if (*it==p)
         {
-            mPartList.pop_back();
+            mPartList.pop_back();            
             return true;
         }
     }
@@ -120,8 +120,7 @@ void MainWindow::storniere(Part *p)
     p->cancelProcess();
     mDoStorno=false;
     logStatus(p);
-    deletePart(p);
-    delete p;
+    deletePart(p);   
     ui->lbStorno->clear();
 }
 
@@ -130,10 +129,10 @@ void MainWindow::logStatus(Part* p)
     QString result ; //"Part: " + mPart->uID()+" Start: " + mPart->processStart().toString("hh:mm:ss")+ " End: "+ mPart->processReady().toString("hh:mm:ss");
     switch (p->processState())
     {
-       case READY: result=p->processReady().toString("hh:mm:ss")+" Ferigstellung "+p->uID()+" in "+QString::number(p->timerEnd()-p->timerStart())+" sek."; p->setProcessDone();break;
-       case CANCELLED: result=p->processStart().toString("hh:mm:ss")+" Storniert "+p->uID(); break;
-       case RUNNING: result=p->processStart().toString("hh:mm:ss")+" Lagerabgang "+p->uID(); break;
-       case DONE: result=p->processReady().toString("hh:mm:ss")+" bereits alle Stationen druchlaufen "+p->uID(); break;
+       case READY: result=p->processReady().toString("hh:mm:ss")+" "+tr("Ferigstellung")+" "+p->uID()+" in "+QString::number(p->timerEnd()-p->timerStart())+" sek."; p->setProcessDone();break;
+       case CANCELLED: result=p->processStart().toString("hh:mm:ss")+" "+tr("Storniert")+" "+p->uID(); break;
+       case RUNNING: result=p->processStart().toString("hh:mm:ss")+" "+tr("Lagerabgang")+" "+p->uID(); break;
+       case DONE: result=p->processReady().toString("hh:mm:ss")+" "+tr("bereits alle Stationen druchlaufen")+" "+p->uID(); break;
        case NEW: ;
     }
 
@@ -165,7 +164,7 @@ void MainWindow::setupPort()
     {
         qDebug() << "Port not readable";
         ui->txtLog->moveCursor (QTextCursor::Start);
-        ui->txtLog->insertPlainText ("Kein RFID-Lesegerät gefunden an Port: "+ portname +'\n');
+        ui->txtLog->insertPlainText (tr("Kein RFID-Lesegerät gefunden an Port")+": "+ portname +'\n');
         ui->txtLog->moveCursor (QTextCursor::Start);
     } else {
         ui->txtLog->clear();
@@ -191,7 +190,7 @@ void MainWindow::onTimer()
            ui->btnPause->setEnabled(false);
            ui->btnStorno->setEnabled(false);
            ui->btnAuswertung->setEnabled(true);
-           ui->txtLog->append(QTime::currentTime().toString("hh:mm:ss")+" Spiel beendet.");
+           ui->txtLog->append(QTime::currentTime().toString("hh:mm:ss")+" "+tr("Spiel beendet")+".");
         }
         */
         ui->lbRemain->setText(QString::number(mTimeCounter/60)+" min "+QString::number(mTimeCounter-(mTimeCounter/60*60))+" sek");
@@ -205,7 +204,7 @@ void MainWindow::on_btnStart_clicked()
     foreach (Part* p, mPartList)
        delete p;
     mPartList.clear();
-    ui->txtLog->append(QTime::currentTime().toString("hh:mm:ss")+" Spiel gestartet.");
+    ui->txtLog->append(QTime::currentTime().toString("hh:mm:ss")+" "+tr("Spiel gestartet")+".");
     ui->btnAuswertung->setEnabled(false);
     ui->btnAbbruch->setEnabled(true);
     ui->btnStart->setEnabled(false);
@@ -224,7 +223,7 @@ void MainWindow::on_btnPause_clicked()
         ui->btnStart->setEnabled(false);
         ui->btnStorno->setEnabled(true);
         ui->txtLog->moveCursor (QTextCursor::Start);
-        ui->txtLog->insertPlainText (QTime::currentTime().toString("hh:mm:ss")+" Spielpause beendet.\n");
+        ui->txtLog->insertPlainText (QTime::currentTime().toString("hh:mm:ss")+" "+tr("Spielpause beendet")+".\n");
         ui->txtLog->moveCursor (QTextCursor::Start);
     }
     else
@@ -233,7 +232,7 @@ void MainWindow::on_btnPause_clicked()
         ui->btnStart->setEnabled(false);
         ui->btnStorno->setEnabled(false);
         ui->txtLog->moveCursor (QTextCursor::Start);
-        ui->txtLog->insertPlainText (QTime::currentTime().toString("hh:mm:ss")+" Spielpause.\n");
+        ui->txtLog->insertPlainText (QTime::currentTime().toString("hh:mm:ss")+" "+tr("Spielpause")+".\n");
         ui->txtLog->moveCursor (QTextCursor::Start);
     }
 }
@@ -247,7 +246,7 @@ void MainWindow::on_btnAbbruch_clicked()
     ui->btnPause->setEnabled(false);
     ui->btnAuswertung->setEnabled(true);
     ui->txtLog->moveCursor (QTextCursor::Start);
-    ui->txtLog->insertPlainText (QTime::currentTime().toString("hh:mm:ss")+" Spiel abgerochen.\n");
+    ui->txtLog->insertPlainText (QTime::currentTime().toString("hh:mm:ss")+" "+tr("Spiel beendet")+".\n");
     ui->txtLog->moveCursor (QTextCursor::Start);
 }
 
@@ -257,7 +256,7 @@ void MainWindow::on_btnStorno_clicked()
    if (mPartList.size()>0)
    {
      mDoStorno=true;
-     ui->lbStorno->setText("warte auf TAG");
+     ui->lbStorno->setText(tr("warte auf TAG"));
    }
 }
 
