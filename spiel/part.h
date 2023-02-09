@@ -32,10 +32,14 @@ public:
     int timerEnd() const;
     void setTimerEnd(int newTimerEnd);
 
+    QString info() const;
+    void setInfo(const QString &newInfo);
+
 signals:
 
 private:
     QString mUID;
+    QString mInfo;
     QTime mProcessStart, mProcessEnd;
     int mTimerStart{0}, mTimerEnd{0};
     state mProcessState{NEW}, mLastState{NEW};

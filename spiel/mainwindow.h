@@ -36,9 +36,9 @@ private slots:
     void on_actionSetup_triggered();
 
 private:
-    Part* locate(QString uid);
+    Part* locate(QJsonObject &obj);
     bool deletePart(Part* p);
-    void addPart(QString uid);
+    void addPart(QJsonObject &obj);
     static bool lessObjectUID(const Part *fp_w1, const Part *fp_w2);
     void buchen(Part* p);
     void storniere(Part* p);

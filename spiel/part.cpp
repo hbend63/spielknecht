@@ -34,7 +34,8 @@ void Part::stepNext()
 {
     int st=static_cast<int>(mProcessState);
     if (mProcessState <= DONE)
-    {   st++;
+    {
+        if (mProcessState < DONE) st++;
         mLastState=mProcessState;
         mProcessState = static_cast<state>(st);
         if ((mLastState==RUNNING) && (mProcessState==DONE))
@@ -52,9 +53,9 @@ void Part::stepPrior()
 {
     int st=static_cast<int>(mProcessState);
     if (mProcessState > NEW)
-    {
-        st--;
+    {        st--;
         mProcessState = static_cast<state>(st);
+        mLastState=mProcessState;
     }
 }
 
@@ -81,6 +82,16 @@ int Part::timerEnd() const
 void Part::setTimerEnd(int newTimerEnd)
 {
     mTimerEnd = newTimerEnd;
+}
+
+QString Part::info() const
+{
+    return mInfo;
+}
+
+void Part::setInfo(const QString &newInfo)
+{
+    mInfo = newInfo;
 }
 
 state Part::lastState() const

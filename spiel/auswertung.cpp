@@ -24,7 +24,7 @@ void Auswertung::setParts(const QList<Part *> &newParts)
 
         if (p->timerEnd()==0)
             tim=-1;
-        ui->txtAuswertung->append("Produktnr: "+p->uID() + "\t"+tr("angefangen")+": " + p->startTime().toString("hh:mm:ss") + "\t"+tr("beendet")+": " + p->endTime().toString("hh:mm:ss") + "\t"+tr("Durchlaufzeit")+": " + QString::number(tim) + " sek.");
+        ui->txtAuswertung->append("Produktnr: "+p->info()+"-"+p->uID() + "\t"+tr("angefangen")+": " + p->startTime().toString("hh:mm:ss") + "\t"+tr("beendet")+": " + p->endTime().toString("hh:mm:ss") + "\t"+tr("Durchlaufzeit")+": " + QString::number(tim) + " sek.");
         if (tim > 0)
         {
           if (tim < minTime)

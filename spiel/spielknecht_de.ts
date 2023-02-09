@@ -6,48 +6,48 @@
     <message>
         <location filename="auswertung.ui" line="14"/>
         <source>Dialog</source>
-        <translation></translation>
+        <translation>Dialog</translation>
     </message>
     <message>
         <location filename="auswertung.cpp" line="27"/>
         <location filename="auswertung.cpp" line="40"/>
         <source>angefangen</source>
-        <translation>started</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="auswertung.cpp" line="27"/>
         <source>beendet</source>
-        <translation>ended</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="auswertung.cpp" line="27"/>
         <source>Durchlaufzeit</source>
-        <translation>Processtime</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="auswertung.cpp" line="39"/>
         <source>in Produktion</source>
-        <translation>in Production</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="auswertung.cpp" line="41"/>
         <source>gefertigt</source>
-        <translation>manufactured</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="auswertung.cpp" line="46"/>
         <source>schnellster Durchlauf</source>
-        <translation>fastest run</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="auswertung.cpp" line="47"/>
         <source>langsamster Durchlauf</source>
-        <translation>slowest run</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="auswertung.cpp" line="48"/>
         <source>mittlere Durchlaufzeit</source>
-        <translation>average run</translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -79,27 +79,27 @@
     <message>
         <location filename="mainwindow.ui" line="141"/>
         <source>Beenden</source>
-        <translation>Stop</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="187"/>
         <source>Storno</source>
-        <translation>Cancel</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="243"/>
         <source>Spielzeit:</source>
-        <translation>Time played:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="354"/>
         <source>Auswertung</source>
-        <translation>Results</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="375"/>
         <source>Datei</source>
-        <translation>File</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="384"/>
@@ -117,59 +117,59 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="122"/>
+        <location filename="mainwindow.cpp" line="123"/>
         <source>Storniert</source>
-        <translation>canceled</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="139"/>
-        <source>Lagerabgang</source>
-        <translation>stock out</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="141"/>
-        <source>bereits alle Stationen druchlaufen</source>
-        <translation>all stations visited</translation>
+        <source>Lagerabgang</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="143"/>
+        <source>bereits alle Stationen druchlaufen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="145"/>
         <source>Fertigstellung</source>
-        <translation>Completion</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="171"/>
+        <location filename="mainwindow.cpp" line="173"/>
         <source>Kein RFID-Lesegerät gefunden an Port</source>
-        <translation>No Reader found on port</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="175"/>
+        <location filename="mainwindow.cpp" line="177"/>
         <source>Port ok.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="218"/>
+        <location filename="mainwindow.cpp" line="220"/>
         <source>Spiel gestartet</source>
-        <translation>Game started</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="237"/>
+        <location filename="mainwindow.cpp" line="239"/>
         <source>Spielpause beendet</source>
-        <translation>Game pause ended</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="246"/>
+        <location filename="mainwindow.cpp" line="248"/>
         <source>Spielpause</source>
-        <translation>Game paused</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="260"/>
+        <location filename="mainwindow.cpp" line="262"/>
         <source>Spiel beendet</source>
-        <translation>Game ended</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="270"/>
+        <location filename="mainwindow.cpp" line="272"/>
         <source>warte auf TAG</source>
-        <translation>waitig for TAG</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -177,7 +177,7 @@
     <message>
         <location filename="setupdialog.ui" line="14"/>
         <source>Dialog</source>
-        <translation>Dialog</translation>
+        <translation type="unfinished">Dialog</translation>
     </message>
 </context>
 </TS>

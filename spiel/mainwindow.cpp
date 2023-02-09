@@ -49,16 +49,16 @@ void MainWindow::readData()
        QJsonDocument doc = QJsonDocument::fromJson(mAnswer);
        QJsonObject obj = doc.object();
        ui->lbUID->setText(obj["UID"].toString());
-       Part* p = locate(obj["UID"].toString());
+       Part* p = locate(obj);
        if (p==nullptr)
-           addPart(obj["UID"].toString());
+           addPart(obj);
        else
            buchen(p);
        mAnswer.clear();
      }
 }
 
-Part *MainWindow::locate(QString uid)
+Part *MainWindow::locate(QJsonObject& obj)
 {
   //QApplication::beep();
   Beeper b;
@@ -67,7 +67,7 @@ Part *MainWindow::locate(QString uid)
   for (auto it=mPartList.begin(); it!=mPartList.end(); it++)
   {
       Part* p=*it;
-      if (p->uID()==uid)
+      if (p->uID()==obj["UID"].toString())
           return p;
   }
   return nullptr;
@@ -86,10 +86,11 @@ bool MainWindow::deletePart(Part *p)
     return false;
 }
 
-void MainWindow::addPart(QString uid)
+void MainWindow::addPart(QJsonObject& obj)
 {
     Part* p= new Part;
-    p->setUID(uid);
+    p->setUID(obj["UID"].toString());
+    p->setInfo(obj["PN"].toString());
     p->startProcess();
     p->setTimerStart(mTimeCounter);
     mPartList.append(p);
@@ -133,14 +134,15 @@ void MainWindow::logStatus(Part* p,bool mark)
     if (mark)
         result+="-->";
 
+    qDebug() <<"l " << p->lastState() << " a" << p->processState();
     switch (p->processState())
     {             
         case NEW: break;
-        case RUNNING:  result+=p->startTime().toString("hh:mm:ss")+" "+tr("Lagerabgang")+" "+p->uID(); break;
+        case RUNNING:  result+=p->startTime().toString("hh:mm:ss")+" "+tr("Lagerabgang")+" "+p->info()+"-"+p->uID(); break;
         case DONE:  if (p->lastState()==DONE)
-                      result+=p->endTime().toString("hh:mm:ss")+" "+tr("bereits alle Stationen druchlaufen")+" "+p->uID();
+                      result+=p->endTime().toString("hh:mm:ss")+" "+tr("bereits alle Stationen druchlaufen")+" "+p->info()+"-"+p->uID();
                     else
-                      result+=p->endTime().toString("hh:mm:ss")+" "+tr("Fertigstellung")+" "+p->uID()+" in "+QString::number(p->timerEnd()-p->timerStart())+" sek.";
+                      result+=p->endTime().toString("hh:mm:ss")+" "+tr("Fertigstellung")+" "+p->info()+"-"+p->uID()+" in "+QString::number(p->timerEnd()-p->timerStart())+" sek.";
 
     }
     writeLog(result);
