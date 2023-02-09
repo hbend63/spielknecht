@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QTime>
 
-enum state {NEW, RUNNING,READY,DONE,CANCELLED};
+enum state {NEW,RUNNING,DONE};
 
 class Part : public QObject
 {
@@ -15,18 +15,16 @@ public:
     QString uID() const;
     void setUID(const QString &newUID);
 
-    QTime processStart() const;
-    void setProcessStart();
+    QTime startTime() const;
+    QTime endTime() const;
 
-    QTime processReady() const;
-    void setProcessReady();
+    void startProcess();
 
-    void setProcessDone();
-
-
-    void cancelProcess();
+    void stepNext();
+    void stepPrior();
 
     state processState() const;
+    state lastState() const;
 
     int timerStart() const;
     void setTimerStart(int newTimerStart);
@@ -35,11 +33,12 @@ public:
     void setTimerEnd(int newTimerEnd);
 
 signals:
+
 private:
     QString mUID;
-    QTime mProcessStart, mProcessReady;
+    QTime mProcessStart, mProcessEnd;
     int mTimerStart{0}, mTimerEnd{0};
-    state mProcessState;
+    state mProcessState{NEW}, mLastState{NEW};
 
 };
 

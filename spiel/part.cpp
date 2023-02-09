@@ -3,7 +3,7 @@
 Part::Part(QObject *parent)
     : QObject{parent}
 {
-   mProcessState=NEW;
+
 }
 
 QString Part::uID() const
@@ -16,12 +16,12 @@ void Part::setUID(const QString &newUID)
     mUID = newUID;
 }
 
-QTime Part::processStart() const
+QTime Part::startTime() const
 {
     return mProcessStart;
 }
 
-void Part::setProcessStart()
+void Part::startProcess()
 {
     if (mProcessState==NEW)
     {
@@ -30,32 +30,31 @@ void Part::setProcessStart()
     }
 }
 
-QTime Part::processReady() const
+void Part::stepNext()
 {
-    return mProcessReady;
-}
-
-void Part::setProcessReady()
-{   if (mProcessState==RUNNING)
-    {
-      mProcessReady = QTime::currentTime();
-      mProcessState=READY;
+    int st=static_cast<int>(mProcessState);
+    if (mProcessState <= DONE)
+    {   st++;
+        mLastState=mProcessState;
+        mProcessState = static_cast<state>(st);
+        if ((mLastState==RUNNING) && (mProcessState==DONE))
+           mProcessEnd = QTime::currentTime();
     }
 }
 
-void Part::setProcessDone()
+QTime Part::endTime() const
 {
-    if (mProcessState==READY)
-          mProcessState=DONE;
-
+    return mProcessEnd;
 }
 
-void Part::cancelProcess()
+
+void Part::stepPrior()
 {
-    if (mProcessState!=NEW)
+    int st=static_cast<int>(mProcessState);
+    if (mProcessState > NEW)
     {
-      mProcessReady = QTime::currentTime();
-      mProcessState=CANCELLED;
+        st--;
+        mProcessState = static_cast<state>(st);
     }
 }
 
@@ -82,4 +81,9 @@ int Part::timerEnd() const
 void Part::setTimerEnd(int newTimerEnd)
 {
     mTimerEnd = newTimerEnd;
+}
+
+state Part::lastState() const
+{
+    return mLastState;
 }

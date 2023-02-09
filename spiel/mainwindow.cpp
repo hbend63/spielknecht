@@ -90,7 +90,7 @@ void MainWindow::addPart(QString uid)
 {
     Part* p= new Part;
     p->setUID(uid);
-    p->setProcessStart();
+    p->startProcess();
     p->setTimerStart(mTimeCounter);
     mPartList.append(p);
     std::sort(mPartList.begin(),mPartList.end(),lessObjectUID);
@@ -109,7 +109,7 @@ void MainWindow::buchen(Part *p)
   if (mDoStorno)
       storniere(p);
   else {
-  p->setProcessReady();
+  p->stepNext();
   p->setTimerEnd(mTimeCounter);
   logStatus(p);
   }
@@ -117,28 +117,33 @@ void MainWindow::buchen(Part *p)
 
 void MainWindow::storniere(Part *p)
 {
-    p->cancelProcess();
+    p->stepPrior();
     mDoStorno=false;
-    logStatus(p);
-    deletePart(p);   
+    writeLog(QTime::currentTime().toString("hh:mm:ss")+" <"+tr("Storniert")+"> "+p->uID());
+    if (p->processState()==NEW)
+       deletePart(p);
+    else
+       logStatus(p,true);
     ui->lbStorno->clear();
 }
 
-void MainWindow::logStatus(Part* p)
+void MainWindow::logStatus(Part* p,bool mark)
 {
-    QString result ; //"Part: " + mPart->uID()+" Start: " + mPart->processStart().toString("hh:mm:ss")+ " End: "+ mPart->processReady().toString("hh:mm:ss");
-    switch (p->processState())
-    {
-       case READY: result=p->processReady().toString("hh:mm:ss")+" "+tr("Ferigstellung")+" "+p->uID()+" in "+QString::number(p->timerEnd()-p->timerStart())+" sek."; p->setProcessDone();break;
-       case CANCELLED: result=p->processStart().toString("hh:mm:ss")+" "+tr("Storniert")+" "+p->uID(); break;
-       case RUNNING: result=p->processStart().toString("hh:mm:ss")+" "+tr("Lagerabgang")+" "+p->uID(); break;
-       case DONE: result=p->processReady().toString("hh:mm:ss")+" "+tr("bereits alle Stationen druchlaufen")+" "+p->uID(); break;
-       case NEW: ;
-    }
+    QString result ;
+    if (mark)
+        result+="-->";
 
-    ui->txtLog->moveCursor (QTextCursor::Start);
-    ui->txtLog->insertPlainText (result+'\n');
-    ui->txtLog->moveCursor (QTextCursor::Start);
+    switch (p->processState())
+    {             
+        case NEW: break;
+        case RUNNING:  result+=p->startTime().toString("hh:mm:ss")+" "+tr("Lagerabgang")+" "+p->uID(); break;
+        case DONE:  if (p->lastState()==DONE)
+                      result+=p->endTime().toString("hh:mm:ss")+" "+tr("bereits alle Stationen druchlaufen")+" "+p->uID();
+                    else
+                      result+=p->endTime().toString("hh:mm:ss")+" "+tr("Fertigstellung")+" "+p->uID()+" in "+QString::number(p->timerEnd()-p->timerStart())+" sek.";
+
+    }
+    writeLog(result);
 }
 
 void MainWindow::setupPort()
@@ -163,13 +168,19 @@ void MainWindow::setupPort()
     if (!port->isReadable())
     {
         qDebug() << "Port not readable";
-        ui->txtLog->moveCursor (QTextCursor::Start);
-        ui->txtLog->insertPlainText (tr("Kein RFID-Lesegerät gefunden an Port")+": "+ portname +'\n');
-        ui->txtLog->moveCursor (QTextCursor::Start);
+        writeLog(tr("Kein RFID-Lesegerät gefunden an Port")+": "+ portname);
+
     } else {
         ui->txtLog->clear();
-        ui->txtLog->append("Port ok.");
+        writeLog(tr("Port ok."));
     }
+}
+
+void MainWindow::writeLog(QString message)
+{
+    ui->txtLog->moveCursor (QTextCursor::Start);
+    ui->txtLog->insertPlainText (message+'\n');
+    ui->txtLog->moveCursor (QTextCursor::Start);
 }
 
 

@@ -12,9 +12,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools SerialPort Multimedia)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools SerialPort Multimedia)
 
-set(TS_FILES spielknecht_de_DE.ts
-             spielknecht_en_US.ts
-)
+
+set(TS_FILES spielknecht_de.ts
+        spielknecht_en.ts
+    )
 
 set(PROJECT_SOURCES
     main.cpp
@@ -36,6 +37,7 @@ set(PROJECT_SOURCES
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+
     qt_add_executable(spielknecht
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
@@ -45,7 +47,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
 # For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 
-    qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+
+   qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+   target_sources(spielknecht PRIVATE ${QM_FILES})
+
 else()
     if(ANDROID)
         add_library(spielknecht SHARED
@@ -60,6 +65,7 @@ else()
     endif()
 
     qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+    target_sources(spielknecht PRIVATE ${QM_FILES})
 endif()
 
 target_link_libraries(spielknecht PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)

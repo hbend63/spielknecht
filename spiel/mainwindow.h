@@ -36,25 +36,26 @@ private slots:
     void on_actionSetup_triggered();
 
 private:
-    Ui::MainWindow *ui;
-    QSerialPort *port;
-    void readData();
-    QByteArray mAnswer;
-    QTimer *mTimer;
-    QList<Part*> mPartList;
     Part* locate(QString uid);
     bool deletePart(Part* p);
     void addPart(QString uid);
     static bool lessObjectUID(const Part *fp_w1, const Part *fp_w2);
     void buchen(Part* p);
     void storniere(Part* p);
-    void logStatus(Part* p);
+    void logStatus(Part* p, bool mark=false);
+    void setupPort();
+    void writeLog(QString message);
+
+private:
+    Ui::MainWindow *ui;
+    QSerialPort *port;
+    void readData();
+    QByteArray mAnswer;
+    QTimer *mTimer;
+    QList<Part*> mPartList;    
     Part* mPart;
     int mTimeCounter{0};
     bool mIsRunning{false};
     bool mDoStorno{false};
-    void setupPort();
-
-
 };
 #endif // MAINWINDOW_H
