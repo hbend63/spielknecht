@@ -35,6 +35,8 @@ private slots:
 
     void on_actionSetup_triggered();
 
+    void on_actionTag_schreiben_triggered();
+
 private:
     Part* locate(QJsonObject &obj);
     bool deletePart(Part* p);

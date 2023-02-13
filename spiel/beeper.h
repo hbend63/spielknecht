@@ -38,7 +38,7 @@ class Beeper : public QObject
     Q_OBJECT
 public:
     explicit Beeper(QObject *parent = nullptr);
-    void beep();
+    void beep(int freq);
 
 signals:
 

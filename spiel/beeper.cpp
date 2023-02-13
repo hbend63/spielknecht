@@ -94,12 +94,12 @@ Beeper::Beeper(QObject *parent)
 {
 }
 
-void Beeper::beep()
+void Beeper::beep(int freq)
 {
     QAudioDevice device = QMediaDevices::defaultAudioOutput();
     QAudioFormat format = device.preferredFormat();
     const int durationMilliSeconds = 150;
-    const int toneSampleRateHz = 3000;
+    const int toneSampleRateHz = freq;
     Generator generator(format, durationMilliSeconds * 1000, toneSampleRateHz);
     QAudioSink audioOutput(device, format);
     generator.start();

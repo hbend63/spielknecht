@@ -375,6 +375,7 @@ color:rgb(85, 0, 0);</string>
      <string>Datei</string>
     </property>
     <addaction name="actionSetup"/>
+    <addaction name="actionTag_schreiben"/>
    </widget>
    <addaction name="menuDatei"/>
   </widget>
@@ -382,6 +383,11 @@ color:rgb(85, 0, 0);</string>
   <action name="actionSetup">
    <property name="text">
     <string>Setup</string>
+   </property>
+  </action>
+  <action name="actionTag_schreiben">
+   <property name="text">
+    <string>Tag schreiben</string>
    </property>
   </action>
  </widget>

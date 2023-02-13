@@ -102,72 +102,77 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="384"/>
+        <location filename="mainwindow.ui" line="385"/>
         <source>Setup</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="18"/>
+        <location filename="mainwindow.ui" line="390"/>
+        <source>Tag schreiben</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="19"/>
         <source>Read UID</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="19"/>
+        <location filename="mainwindow.cpp" line="20"/>
         <source>None</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="123"/>
+        <location filename="mainwindow.cpp" line="125"/>
         <source>Storniert</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="141"/>
+        <location filename="mainwindow.cpp" line="143"/>
         <source>Lagerabgang</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="143"/>
+        <location filename="mainwindow.cpp" line="145"/>
         <source>bereits alle Stationen druchlaufen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="145"/>
+        <location filename="mainwindow.cpp" line="147"/>
         <source>Fertigstellung</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="173"/>
+        <location filename="mainwindow.cpp" line="175"/>
         <source>Kein RFID-Lesegerät gefunden an Port</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="177"/>
+        <location filename="mainwindow.cpp" line="179"/>
         <source>Port ok.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="220"/>
+        <location filename="mainwindow.cpp" line="225"/>
         <source>Spiel gestartet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="239"/>
+        <location filename="mainwindow.cpp" line="244"/>
         <source>Spielpause beendet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="248"/>
+        <location filename="mainwindow.cpp" line="253"/>
         <source>Spielpause</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="262"/>
+        <location filename="mainwindow.cpp" line="269"/>
         <source>Spiel beendet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="272"/>
+        <location filename="mainwindow.cpp" line="279"/>
         <source>warte auf TAG</source>
         <translation type="unfinished"></translation>
     </message>
@@ -178,6 +183,34 @@
         <location filename="setupdialog.ui" line="14"/>
         <source>Dialog</source>
         <translation type="unfinished">Dialog</translation>
+    </message>
+</context>
+<context>
+    <name>TagWriteDialog</name>
+    <message>
+        <location filename="tagwritedialog.ui" line="14"/>
+        <source>Dialog</source>
+        <translation type="unfinished">Dialog</translation>
+    </message>
+    <message>
+        <location filename="tagwritedialog.ui" line="22"/>
+        <source>Infotext</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tagwritedialog.ui" line="32"/>
+        <source>Startnummer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tagwritedialog.ui" line="42"/>
+        <source>Schreiben</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tagwritedialog.ui" line="52"/>
+        <source>Fertig</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

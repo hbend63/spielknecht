@@ -34,6 +34,9 @@ void toSerialResult(MFRC522::StatusCode status)
   {
     DynamicJsonDocument doc(1024);
     doc["res"] = "ok";
+    String data;
+    (counter < 10) ? data = tagInfo + "-0" + String(counter) : data = tagInfo + "-" + String(counter);
+    doc["inf"] = data;
     String output0;
     serializeJson(doc, output0); // Serialize Json Document to output String
     Serial.print(output0);
@@ -211,18 +214,24 @@ void readData()
 bool doRead{true};
 
 String inputString = ""; // a String to hold incoming data
-
+bool starting{false};
 void serialEvent()
 {
+  
   while (Serial.available())
   {
     // get the new byte:
     char inChar = (char)Serial.read();
     // add it to the inputString:
-    inputString += inChar;
+    
     // if the incoming character is a newline, set a flag so the main loop can
     // do something about it:
-    if (inChar == '}')
+    if (inChar == '{')
+       starting=true;
+    if (starting) 
+       inputString += inChar;
+      
+    if (inChar == '}' && starting)
     {
       if ((inputString[0] == '{') && (inputString[inputString.length() - 1] == '}'))
       {
@@ -241,22 +250,30 @@ void serialEvent()
           // Serial.print(F("deserializeJson() failed: "));
           // Serial.println(error.f_str());
           inputString = "";
+          starting=false;
           return;
         }
         String cmd = doc["cmd"];
         if (cmd == "write")
         {
+          //Serial.println("WRITING...");
           doRead = false;
           String tInfo = doc["info"];
           tagInfo = tInfo;
           counter = doc["counter"];
         }
         else if (cmd == "read")
+        {
           doRead = true;
+          //ESP.restart();
+          //Serial.println("READING...");
+        }
       }
       inputString = "";
+      starting=false;
     }
   }
+  
 }
 
 void setup()

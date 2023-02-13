@@ -33,6 +33,9 @@ set(PROJECT_SOURCES
     spielknecht.qrc
     beeper.h
     beeper.cpp
+    tagwritedialog.h
+    tagwritedialog.cpp
+    tagwritedialog.ui
     ${TS_FILES}
 )
 

@@ -8,6 +8,7 @@
 #include <QSettings>
 #include "auswertung.h"
 #include "setupdialog.h"
+#include "tagwritedialog.h"
 #include "beeper.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -21,8 +22,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->lbStorno->clear();
     port = new QSerialPort;
     setupPort();
-
-
     mTimer = new QTimer();
     connect(mTimer, &QTimer::timeout, this, &MainWindow::onTimer);
     mTimer->start(1000);
@@ -31,6 +30,9 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    port->clear();
+    port->clearError();
+    port->close();
     delete port;
     delete ui;
 }
@@ -62,7 +64,7 @@ Part *MainWindow::locate(QJsonObject& obj)
 {
   //QApplication::beep();
   Beeper b;
-  b.beep();
+  b.beep(3000);
 
   for (auto it=mPartList.begin(); it!=mPartList.end(); it++)
   {
@@ -166,7 +168,7 @@ void MainWindow::setupPort()
     port->setParity(QSerialPort::NoParity);
 
     connect(port,&QSerialPort::readyRead,this,&MainWindow::readData);
-    port->open(QSerialPort::ReadOnly);
+    port->open(QSerialPort::ReadWrite);
     if (!port->isReadable())
     {
         qDebug() << "Port not readable";
@@ -213,10 +215,13 @@ void MainWindow::onTimer()
 
 void MainWindow::on_btnStart_clicked()
 {
+    ui->actionTag_schreiben->setEnabled(false);
+    ui->actionSetup->setEnabled(false);
     ui->txtLog->clear();
     foreach (Part* p, mPartList)
        delete p;
     mPartList.clear();
+    port->clear();
     ui->txtLog->append(QTime::currentTime().toString("hh:mm:ss")+" "+tr("Spiel gestartet")+".");
     ui->btnAuswertung->setEnabled(false);
     ui->btnAbbruch->setEnabled(true);
@@ -253,6 +258,8 @@ void MainWindow::on_btnPause_clicked()
 
 void MainWindow::on_btnAbbruch_clicked()
 {
+    ui->actionTag_schreiben->setEnabled(true);
+    ui->actionSetup->setEnabled(true);
     mIsRunning=false;
     ui->btnAbbruch->setEnabled(false);
     ui->btnStart->setEnabled(true);
@@ -281,7 +288,6 @@ void MainWindow::on_btnAuswertung_clicked()
     aw->setParts(mPartList);
     aw->exec();
     delete aw;
-
 }
 
 
@@ -292,5 +298,21 @@ void MainWindow::on_actionSetup_triggered()
    delete setup;
    port->close();
    setupPort();
+}
+
+
+void MainWindow::on_actionTag_schreiben_triggered()
+{
+    mTimer->stop();
+    TagWriteDialog * dlg = new TagWriteDialog(this);
+    port->clear();
+    disconnect(port,&QSerialPort::readyRead,this,&MainWindow::readData);
+    dlg->setPort(port);
+    dlg->exec();
+    dlg->resetPort();
+    delete dlg;
+    connect(port,&QSerialPort::readyRead,this,&MainWindow::readData);
+
+    mTimer->start(1000);
 }
 
