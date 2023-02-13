@@ -15,49 +15,34 @@
 
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 
-String kennung = "";
+String tagInfo = "";
 int counter{0};
 
-String toMessage(String message, String value)
+void toSerialResult(MFRC522::StatusCode status)
 {
-  DynamicJsonDocument doc(1024);
-  doc["msg"] = message;
-  doc["val"] = value;
-  String output0;
-  serializeJson(doc, output0); // Serialize Json Document to output String
-  return output0;
-}
-
-void fromMessage(const String input, String &_message, String &_value)
-{
-  if ((input[0] == '{') && (input[input.length() - 1] == '}'))
+  if (status != MFRC522::STATUS_OK)
   {
-    String json = input;
-    // Serial.print("JSON-String: "); Serial.println(json);
-    //  Allocate the JSON document
-    //
-    //  Inside the brackets, 200 is the capacity of the memory pool in bytes.
-    //  Don't forget to change this value to match your JSON document.
-    //  Use https://arduinojson.org/v6/assistant to compute the capacity.
-    StaticJsonDocument<200> doc;
-    DeserializationError error = deserializeJson(doc, json);
-    // Test if parsing succeeds.
-    if (error)
-    {
-      // Serial.print(F("deserializeJson() failed: "));
-      // Serial.println(error.f_str());
-      return;
-    }
-    String message = doc["msg"];
-    String value = doc["val"];
-    _message = message;
-    _value = value;
+    DynamicJsonDocument doc(1024);
+    doc["res"] = "err";
+    String output0;
+    serializeJson(doc, output0); // Serialize Json Document to output String
+    Serial.print(output0);
+    // Serial.println(mfrc522.GetStatusCodeName(status));
+    return;
+  }
+  else
+  {
+    DynamicJsonDocument doc(1024);
+    doc["res"] = "ok";
+    String output0;
+    serializeJson(doc, output0); // Serialize Json Document to output String
+    Serial.print(output0);
   }
 }
 
 void writeData()
 {
-  Serial.println("Writing....");
+  //Serial.println("Writing....");
   // return;
   //  Prepare key - all keys are set to FFFFFFFFFFFFh at chip delivery from the factory.
   MFRC522::MIFARE_Key key;
@@ -85,9 +70,12 @@ void writeData()
 
   counter++;
 
-  String data = kennung + String(counter);
+  String data;
+  (counter < 10) ? data = tagInfo + "-0" + String(counter) : data = tagInfo + "-" + String(counter);
+
   for (int i = 0; i < data.length(); i++)
     buffer[i] = data[i];
+
   len = data.length();
 
   for (byte i = len; i < 30; i++)
@@ -96,46 +84,24 @@ void writeData()
   block = 1;
   // Serial.println(F("Authenticating using key A..."));
   status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, block, &key, &(mfrc522.uid));
-  if (status != MFRC522::STATUS_OK)
+  if (status == MFRC522::STATUS_OK)
   {
-    Serial.print(F("PCD_Authenticate() failed: "));
-    Serial.println(mfrc522.GetStatusCodeName(status));
-    return;
-  }
-  else
-    Serial.println(F("PCD_Authenticate() success: "));
-
-  // Write block
-  status = mfrc522.MIFARE_Write(block, buffer, 16);
-  if (status != MFRC522::STATUS_OK)
-  {
-    Serial.print(F("MIFARE_Write() failed: "));
-    Serial.println(mfrc522.GetStatusCodeName(status));
-    return;
-  }
-  else
-    Serial.println(F("MIFARE_Write() success: "));
-
-  block = 2;
-  // Serial.println(F("Authenticating using key A..."));
-  status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, block, &key, &(mfrc522.uid));
-  if (status != MFRC522::STATUS_OK)
-  {
-    Serial.print(F("PCD_Authenticate() failed: "));
-    Serial.println(mfrc522.GetStatusCodeName(status));
-    return;
+    // Write block
+    status = mfrc522.MIFARE_Write(block, buffer, 16);
+    if (status == MFRC522::STATUS_OK)
+    {
+      block = 2;
+      // Serial.println(F("Authenticating using key A..."));
+      status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, block, &key, &(mfrc522.uid));
+      if (status == MFRC522::STATUS_OK)
+      {
+        // Write block
+        status = mfrc522.MIFARE_Write(block, &buffer[16], 16);
+        toSerialResult(status);
+      }
+    }
   }
 
-  // Write block
-  status = mfrc522.MIFARE_Write(block, &buffer[16], 16);
-  if (status != MFRC522::STATUS_OK)
-  {
-    Serial.print(F("MIFARE_Write() failed: "));
-    Serial.println(mfrc522.GetStatusCodeName(status));
-    return;
-  }
-  else
-    Serial.println(F("MIFARE_Write() success: "));
   /*
   // Ask personal data: First name
   Serial.println(F("Type First name, ending with #"));
@@ -198,18 +164,18 @@ void readData()
     key.keyByte[i] = 0xFF;
 
   MFRC522::PICC_Type piccType = mfrc522.PICC_GetType(mfrc522.uid.sak);
-  //Serial.print("RFID/NFC Tag Type: ");
-  //Serial.println(mfrc522.PICC_GetTypeName(piccType));  
+  // Serial.print("RFID/NFC Tag Type: ");
+  // Serial.println(mfrc522.PICC_GetTypeName(piccType));
 
   String uid = "";
-  
+
   for (int i = 0; i < mfrc522.uid.size; i++)
   {
-    char buffer[4];    
-    snprintf(buffer, 4, "%02x", mfrc522.uid.uidByte[i]);    
-    uid += buffer;   
+    char buffer[4];
+    snprintf(buffer, 4, "%02x", mfrc522.uid.uidByte[i]);
+    uid += buffer;
   }
-  
+
   doc["UID"] = uid;
 
   block = 1;
@@ -217,7 +183,7 @@ void readData()
 
   // Wenn Userdaten möglich sind:
   status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, 1, &key, &(mfrc522.uid)); // line 834
-  
+
   if (status == MFRC522::STATUS_OK)
   {
     status = mfrc522.MIFARE_Read(block, buffer, &len);
@@ -226,7 +192,7 @@ void readData()
       Serial.print(F("Reading failed: "));
       Serial.println(mfrc522.GetStatusCodeName(status));
       return;
-    }    
+    }
     String code = "";
     // PRINT PRODUCTCODE
     for (uint8_t i = 0; i < 16; i++)
@@ -258,23 +224,37 @@ void serialEvent()
     // do something about it:
     if (inChar == '}')
     {
-      // String auswerten
-      String msg, val;
-      fromMessage(inputString, msg, val);
-      inputString = "";
-      if (msg == "cmd")
+      if ((inputString[0] == '{') && (inputString[inputString.length() - 1] == '}'))
       {
-        if (val[0] == 'w')
+        String json = inputString;
+        // Serial.print("JSON-String: "); Serial.println(json);
+        //  Allocate the JSON document
+        //
+        //  Inside the brackets, 200 is the capacity of the memory pool in bytes.
+        //  Don't forget to change this value to match your JSON document.
+        //  Use https://arduinojson.org/v6/assistant to compute the capacity.
+        StaticJsonDocument<200> doc;
+        DeserializationError error = deserializeJson(doc, json);
+
+        if (error)
+        {
+          // Serial.print(F("deserializeJson() failed: "));
+          // Serial.println(error.f_str());
+          inputString = "";
+          return;
+        }
+        String cmd = doc["cmd"];
+        if (cmd == "write")
         {
           doRead = false;
-          // Kennung auslesen
-          kennung = "tst-";
-          // Startwert auslesen
-          counter = 5;
+          String tInfo = doc["info"];
+          tagInfo = tInfo;
+          counter = doc["counter"];
         }
-        else
+        else if (cmd == "read")
           doRead = true;
       }
+      inputString = "";
     }
   }
 }
