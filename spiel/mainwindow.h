@@ -5,6 +5,7 @@
 #include <QSerialPort>
 #include <QTimer>
 #include <QList>
+#include <QTime>
 #include "part.h"
 
 
@@ -54,6 +55,7 @@ private:
     void readData();
     QByteArray mAnswer;
     QTimer *mTimer;
+    QTime m_GameTime;
     QList<Part*> mPartList;    
     Part* mPart;
     int mTimeCounter{0};

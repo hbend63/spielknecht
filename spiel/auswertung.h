@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QList>
+#include <QTime>
 #include "part.h"
 
 namespace Ui {
@@ -19,8 +20,13 @@ public:
 
     void setParts(const QList<Part *> &newParts);
 
+    QTime gameTime() const;
+    void setGameTime(const QTime &newGameTime);
+
 private:
     Ui::Auswertung *ui;
+    QTime mGameTime;
+
 
 };
 

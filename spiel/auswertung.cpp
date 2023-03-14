@@ -17,6 +17,7 @@ Auswertung::~Auswertung()
 void Auswertung::setParts(const QList<Part *> &newParts)
 {    
     int minTime{9999}, maxTime{0}, sumTime{0}, count{0};
+    QTime s,e;
 
     foreach (Part* p, newParts)
     {
@@ -24,7 +25,11 @@ void Auswertung::setParts(const QList<Part *> &newParts)
 
         if (p->timerEnd()==0)
             tim=-1;
-        ui->txtAuswertung->append("Produktnr: "+p->info()+"-"+p->uID() + "\t"+tr("angefangen")+": " + p->startTime().toString("hh:mm:ss") + "\t"+tr("beendet")+": " + p->endTime().toString("hh:mm:ss") + "\t"+tr("Durchlaufzeit")+": " + QString::number(tim) + " sek.");
+        //ui->txtAuswertung->append("Produktnr: "+p->info()+"-"+p->uID() + "\t"+tr("angefangen")+": " + p->startTime().toString("hh:mm:ss") + "\t"+tr("beendet")+": " + p->endTime().toString("hh:mm:ss") + "\t"+tr("Durchlaufzeit")+": " + QString::number(tim) + " sek.");
+        s=mGameTime.addSecs(p->timerStart());
+        e=mGameTime.addSecs(p->timerEnd());
+
+        ui->txtAuswertung->append("Produktnr: "+p->info()+"-"+p->uID() + "\t"+tr("angefangen")+": " + s.toString("hh:mm:ss") + "\t"+tr("beendet")+": " + e.toString("hh:mm:ss") + "\t"+tr("Durchlaufzeit")+": " + QString::number(tim) + " sek.");
         if (tim > 0)
         {
           if (tim < minTime)
@@ -43,10 +48,20 @@ void Auswertung::setParts(const QList<Part *> &newParts)
     if (count > 0)
     {
        ui->txtAuswertung->append("");
-       ui->txtAuswertung->append(tr("schnellster Durchlauf")+": "+QString::number(minTime)+ " sek.");
-       ui->txtAuswertung->append(tr("langsamster Durchlauf")+": "+QString::number(maxTime)+ " sek.");
-       ui->txtAuswertung->append(tr("mittlere Durchlaufzeit")+": "+QString::number(sumTime/count)+ " sek.");
+       ui->txtAuswertung->append(tr("schnellster Durchlauf")+"\t: "+QString::number(minTime/60.0,'g',3)+ " min.");
+       ui->txtAuswertung->append(tr("langsamster Durchlauf")+"\t: "+QString::number(maxTime/60.0,'g',3)+ " min.");
+       ui->txtAuswertung->append(tr("mittlere Durchlaufzeit")+"\t: "+QString::number(sumTime/(count*60.0),'g',3)+ " min.");
     }
+}
+
+QTime Auswertung::gameTime() const
+{
+    return mGameTime;
+}
+
+void Auswertung::setGameTime(const QTime &newGameTime)
+{
+    mGameTime = newGameTime;
 }
 
 

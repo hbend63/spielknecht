@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->lbUIDDesc->setText(tr("Read UID")+": ");
     ui->lbUID->setText(tr("None"));
     ui->lbRemain->setText(QString::number(mTimeCounter/60)+" min");
+    ui->lbGameTime->clear();
     ui->lbStorno->clear();
     port = new QSerialPort;
     setupPort();
@@ -133,6 +134,7 @@ void MainWindow::storniere(Part *p)
 void MainWindow::logStatus(Part* p,bool mark)
 {
     QString result ;
+    QTime t;
     if (mark)
         result+="-->";
 
@@ -140,9 +142,11 @@ void MainWindow::logStatus(Part* p,bool mark)
     switch (p->processState())
     {             
         case NEW: break;
-        case RUNNING:  result+=p->startTime().toString("hh:mm:ss")+" "+tr("Lagerabgang")+" "+p->info()+"-"+p->uID(); break;
-        case DONE:  if (p->lastState()==DONE)
-                      result+=p->endTime().toString("hh:mm:ss")+" "+tr("bereits alle Stationen druchlaufen")+" "+p->info()+"-"+p->uID();
+        case RUNNING: t=m_GameTime.addSecs(p->timerStart());
+                     result+=t.toString("hh:mm:ss")+" "+tr("Lagerabgang")+" "+p->info()+"-"+p->uID(); break;
+        case DONE:    t=m_GameTime.addSecs(p->timerEnd());
+                     if (p->lastState()==DONE)
+                      result+=t.toString("hh:mm:ss")+" "+tr("bereits alle Stationen druchlaufen")+" "+p->info()+"-"+p->uID();
                     else
                       result+=p->endTime().toString("hh:mm:ss")+" "+tr("Fertigstellung")+" "+p->info()+"-"+p->uID()+" in "+QString::number(p->timerEnd()-p->timerStart())+" sek.";
 
@@ -196,6 +200,7 @@ void MainWindow::onTimer()
     ui->lbClock->setText(text);
     if (mIsRunning) {
         mTimeCounter++;
+        m_GameTime.addMSecs(mTimeCounter*1000);
         /*
         if (mTimeCounter < 0)
         {
@@ -209,6 +214,7 @@ void MainWindow::onTimer()
         }
         */
         ui->lbRemain->setText(QString::number(mTimeCounter/60)+" min "+QString::number(mTimeCounter-(mTimeCounter/60*60))+" sek");
+        ui->lbGameTime->setText(m_GameTime.toString("hh:mm:ss"));
     }
 }
 
@@ -228,6 +234,7 @@ void MainWindow::on_btnStart_clicked()
     ui->btnStart->setEnabled(false);
     ui->btnPause->setEnabled(true);
     ui->btnStorno->setEnabled(true);
+    m_GameTime=QTime::currentTime();
     mIsRunning=true;
 }
 
@@ -285,6 +292,7 @@ void MainWindow::on_btnAuswertung_clicked()
 {
     if (mPartList.size()==0) return;
     Auswertung* aw = new Auswertung(this);
+    aw->setGameTime(m_GameTime);
     aw->setParts(mPartList);
     aw->exec();
     delete aw;
