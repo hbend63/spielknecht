@@ -235,6 +235,7 @@ void MainWindow::on_btnStart_clicked()
     ui->btnPause->setEnabled(true);
     ui->btnStorno->setEnabled(true);
     m_GameTime=QTime::currentTime();
+    mTimeCounter=0;
     mIsRunning=true;
 }
 
